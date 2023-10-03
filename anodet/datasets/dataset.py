@@ -49,6 +49,9 @@ class AnodetDataset(Dataset):
         image = Image.open(self.image_paths[idx]).convert('RGB')
         image = self.image_transforms(image)
 
+        # Add patche extraction here?
+        # patches
+
         # Load mask if mask_directory_path argument is given
         if self.mask_directory_path is not None:
             mask = Image.open(self.mask_paths[idx])
