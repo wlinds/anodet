@@ -8,7 +8,7 @@ from typing import List, Optional, Callable, Union
 from torchvision import transforms as T
 from PIL import Image
 import os
-
+import cv2
 
 standard_image_transform = T.Compose([T.Resize(224),
                                       T.CenterCrop(224),
@@ -207,3 +207,41 @@ def split_tensor_and_run_function(
     output_tensor = torch.cat(tensors_list)
 
     return output_tensor
+
+def cv2_extract_patches_from_image(image_path, patch_size, stride):
+    """
+    Extract patches from an image.
+
+    Args:
+        image_path (str): Path to the input image.
+        patch_size (tuple): Size of the patches to be extracted (height, width).
+        stride (int): Stride for patch extraction.
+
+    Returns:
+        List of extracted patches.
+    """
+    patches = []
+    
+    image = cv2.imread(image_path)
+    
+    if image is not None:
+        height, width, _ = image.shape
+        
+        for y in range(0, height - patch_size[0] + 1, stride):
+            for x in range(0, width - patch_size[1] + 1, stride):
+                patch = image[y:y + patch_size[0], x:x + patch_size[1]]
+                patches.append(patch)
+    
+    return patches
+
+def torch_extract_patches_from_image(image, patch_size, stride):
+    _, _, height, width = image.shape
+    patches = []
+
+    for y in range(0, height - patch_size, stride):
+        for x in range(0, width - patch_size, stride):
+            # Extract the patch
+            patch = image[:, :, y:y+patch_size, x:x+patch_size]
+            patches.append(patch)
+
+    return torch.stack(patches)
