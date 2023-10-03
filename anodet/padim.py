@@ -5,9 +5,9 @@ Provides classes and functions for working with PaDiM.
 import math
 import random
 import torch
-import torch.nn.functional as F
+import torch.nn.functional as F # For interpolate
 import numpy as np
-from torchvision import transforms as T
+from torchvision import transforms as T # For gaussian blur
 from tqdm import tqdm
 from typing import Optional, Callable, List, Tuple
 from .feature_extraction import ResnetEmbeddingsExtractor
@@ -58,7 +58,7 @@ class Padim:
             self.layer_indices = [0, 1, 2]
 
         self.layer_hook = layer_hook
-        self.to_device(self.device)
+        self.to_device(self.device) # call self.to_device on __init__
 
     def to_device(self, device: torch.device) -> None:
         """Perform device conversion on backone, mean, cov_inv and channel_indices
@@ -68,9 +68,9 @@ class Padim:
 
         """
 
-        self.device = device
+        self.device = device # TODO Is it necessary to assign this here again?
         if self.embeddings_extractor is not None:
-            self.embeddings_extractor.to_device(device)
+            self.embeddings_extractor.to_device(device) #ResnetEmbeddingsExtractor.backbone.to(device)
         if self.mean is not None:
             self.mean = self.mean.to(device)
         if self.cov_inv is not None:
