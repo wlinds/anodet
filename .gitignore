@@ -7,3 +7,5 @@ distributions/*
 
 *venv
 *DS_Store
+
+*.png
